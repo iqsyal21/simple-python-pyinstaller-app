@@ -1,4 +1,7 @@
 pipeline {
+    triggers {
+        pollSCM('*/2 * * * *') 
+    }
     agent {
         docker {
             image 'python:2-alpine'
