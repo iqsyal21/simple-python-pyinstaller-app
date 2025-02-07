@@ -17,13 +17,18 @@ node {
     }
 
     stage('Deploy') {
-        docker.image('python:2-alpine').inside {
-            sh 'python sources/add2vals.py'
+        try {
+            docker.image('python:2-alpine').inside {
+                sh 'python sources/add2vals.py'
 
-            echo 'Aplikasi berjalan selama 1 menit...'
-            sleep(time: 60, unit: 'SECONDS') 
-            
-            sh 'pkill -f "python sources/add2vals.py"'
+                echo 'Aplikasi berjalan selama 1 menit...'
+                sleep(time: 60, unit: 'SECONDS')
+                
+                sh 'pkill -f "python sources/add2vals.py"'
+            }
+        } catch (err) {
+            echo "ERROR: Deploy stage failed - ${err.getMessage()}"
+            error "Deployment failed. Check logs for more details."
         }
     }
 }
