@@ -22,9 +22,7 @@ node {
                 sh 'python sources/add2vals.py 5 3'
 
                 echo 'Aplikasi berjalan selama 1 menit...'
-                sleep(time: 60, unit: 'SECONDS') 
-                
-                sh 'pkill -f "python sources/add2vals.py"'
+                sleep(time: 60, unit: 'SECONDS')                 
             }
         } catch (err) {
             echo "ERROR: Deploy stage failed - ${err.getMessage()}"
