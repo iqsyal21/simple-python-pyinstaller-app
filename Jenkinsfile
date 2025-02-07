@@ -1,18 +1,17 @@
-properties([
-    pipelineTriggers([
-        pollSCM('H/2 * * * *') 
-    ])
-])
-
 node {
+    properties([
+        pipelineTriggers([pollSCM('H/2 * * * *')]) // Cek commit baru setiap 2 menit
+    ])
+
     try {
-        docker.image('python:2-alpine').inside {
-            stage('Build') {
+        stage('Build') {
+            docker.image('python:2-alpine').inside {
                 sh 'python -m py_compile sources/add2vals.py sources/calc.py'
             }
         }
-        docker.image('qnib/pytest').inside {
-            stage('Test') {
+
+        stage('Test') {
+            docker.image('qnib/pytest').inside {
                 sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
                 junit 'test-reports/results.xml'
             }
