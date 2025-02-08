@@ -16,13 +16,19 @@ node {
         }
     }
 
+    stage('Manual Approval') {
+        steps {
+            input message: 'Lanjutkan ke tahap Deploy?', ok: 'Proceed'
+        }
+    }
+
     stage('Deploy') {
         try {
             docker.image('python:2-alpine').inside {
-                sh 'python sources/add2vals.py 5 3'
+                sh 'python sources/add2vals.py 5 3 &'
 
                 echo 'Aplikasi berjalan selama 1 menit...'
-                sleep(time: 60, unit: 'SECONDS')                 
+                sleep(time: 60, unit: 'SECONDS')
             }
         } catch (err) {
             echo "ERROR: Deploy stage failed - ${err.getMessage()}"
