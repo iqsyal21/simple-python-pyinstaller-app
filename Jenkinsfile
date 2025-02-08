@@ -4,35 +4,49 @@ node {
     ])
 
     stage('Build') {
-        docker.image('python:2-alpine').inside {
-            sh 'python -m py_compile sources/add2vals.py sources/calc.py'
+        steps {
+            script {
+                docker.image('python:2-alpine').inside {
+                    sh 'python -m py_compile sources/add2vals.py sources/calc.py'
+                }
+            }
         }
     }
 
     stage('Test') {
-        docker.image('qnib/pytest').inside {
-            sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
-            junit 'test-reports/results.xml'
+        steps {
+            script {
+                docker.image('qnib/pytest').inside {
+                    sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
+                    junit 'test-reports/results.xml'
+                }
+            }
         }
     }
 
     stage('Manual Approval') {
         steps {
-            input message: 'Lanjutkan ke tahap Deploy?', ok: 'Proceed'
+            script {
+                input message: 'Lanjutkan ke tahap Deploy?', ok: 'Proceed'
+            }
         }
     }
 
     stage('Deploy') {
-        try {
-            docker.image('python:2-alpine').inside {
-                sh 'python sources/add2vals.py 5 3 &'
+        steps {
+            script {
+                try {
+                    docker.image('python:2-alpine').inside {
+                        sh 'python sources/add2vals.py 5 3 &'
 
-                echo 'Aplikasi berjalan selama 1 menit...'
-                sleep(time: 60, unit: 'SECONDS')
+                        echo 'Aplikasi berjalan selama 1 menit...'
+                        sleep(time: 60, unit: 'SECONDS') 
+                    }
+                } catch (err) {
+                    echo "ERROR: Deploy stage failed - ${err.getMessage()}"
+                    error "Deployment failed. Check logs for more details."
+                }
             }
-        } catch (err) {
-            echo "ERROR: Deploy stage failed - ${err.getMessage()}"
-            error "Deployment failed. Check logs for more details."
         }
     }
 }
