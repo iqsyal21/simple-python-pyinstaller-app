@@ -25,7 +25,8 @@ node {
 
             if (userInput == 'Tidak') {
                 echo "Deploy dihentikan oleh user."
-                error "Pipeline dihentikan sesuai permintaan."
+                currentBuild.result = 'ABORTED' 
+                return
             }
         }
     }
