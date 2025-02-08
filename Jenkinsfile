@@ -18,16 +18,7 @@ node {
 
     stage('Manual Approve') {
         script {
-            def userInput = input message: 'Lanjutkan ke tahap Deploy?', 
-                parameters: [
-                    choice(name: 'Pilih', choices: ['Ya', 'Tidak'], description: 'Pilih "Ya" untuk lanjut deploy, atau "Tidak" untuk selesai.')
-                ]
-
-            if (userInput == 'Tidak') {
-                echo "Deploy dihentikan oleh user."
-                currentBuild.result = 'ABORTED' 
-                return
-            }
+           input message: 'Lanjutkan ke tahap Deploy? (Klik "Abort" untuk mengakhiri)'
         }
     }
 
