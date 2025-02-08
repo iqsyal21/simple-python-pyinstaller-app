@@ -39,7 +39,9 @@ node {
                 sh 'pyinstaller --onefile sources/add2vals.py'
 
                 echo 'Aplikasi berjalan selama 1 menit...'
-                sleep(time: 60, unit: 'SECONDS')                 
+                sleep(time: 60, unit: 'SECONDS')
+                
+                sh './jenkins/kill.sh'
             }
         } catch (err) {
             echo "ERROR: Deploy stage failed - ${err.getMessage()}"
