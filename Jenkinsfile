@@ -25,9 +25,6 @@ node {
 
             if (userInput == 'Tidak') {
                 echo "Deploy dihentikan oleh user."
-                docker.image('python:2-alpine').inside {
-                    sh './jenkins/scripts/kill.sh'
-                }
                 error "Pipeline dihentikan sesuai permintaan."
             }
         }
@@ -39,9 +36,7 @@ node {
                 sh 'python sources/add2vals.py 5 3'
 
                 echo 'Aplikasi berjalan selama 1 menit...'
-                sleep(time: 60, unit: 'SECONDS')
-                
-                sh './jenkins/scripts/kill.sh'
+                sleep(time: 60, unit: 'SECONDS')                
             }
         } catch (err) {
             echo "ERROR: Deploy stage failed - ${err.getMessage()}"
