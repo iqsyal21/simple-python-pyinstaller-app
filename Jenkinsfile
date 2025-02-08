@@ -1,6 +1,6 @@
 node {
     properties([
-        pipelineTriggers([pollSCM('H/2 * * * *')])
+        pipelineTriggers([pollSCM('H/2 * * * *')]) 
     ])
 
     stage('Build') {
@@ -38,7 +38,6 @@ node {
                 try {
                     docker.image('python:2-alpine').inside {
                         sh 'python sources/add2vals.py 5 3 &'
-
                         echo 'Aplikasi berjalan selama 1 menit...'
                         sleep(time: 60, unit: 'SECONDS') 
                     }
